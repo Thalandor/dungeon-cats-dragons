@@ -19,7 +19,7 @@
        url('./assets/dndc-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
-
+  size-adjust: 150%;
 }
 
 a {
@@ -37,6 +37,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  font-size: 50px;
 }
 
 h1 {
@@ -56,5 +57,14 @@ h1 {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
   }
 }

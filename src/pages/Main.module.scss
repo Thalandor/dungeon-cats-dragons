@@ -1,0 +1,33 @@
+.parent{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .title{
+        flex-grow: 1;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        & img :global{
+            animation: rotation 10s infinite linear;
+        }
+        & .and{
+            font-size: 120px;
+            padding: 28px;
+        }
+        & .elements{
+            padding: 28px;
+        }        
+    }
+
+    .options{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-grow: 1;
+
+        & div:hover{
+            color: yellow;
+        }
+    }
+}
