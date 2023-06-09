@@ -1,3 +1,4 @@
+import { ICharacter } from "../../pages/NewGame";
 import Stats from "../stats/Stats";
 import styles from "./Character.module.scss";
 
@@ -10,33 +11,19 @@ export interface IStats {
   charisma: number;
 }
 
-interface ICharacter {
-  name: string;
-  avatar: string;
-  body: string;
-  stats: IStats;
+interface Props {
+  selectedCharacter: ICharacter;
 }
 
-const Character = () => {
-  const characterSelected: ICharacter = {
-    name: "barcatian",
-    avatar: "",
-    body: "",
-    stats: {
-      strength: 5,
-      dexterity: 3.5,
-      constitution: 4,
-      intelligence: 2,
-      wisdom: 1,
-      charisma: 2,
-    },
-  };
-
+const Character: React.FC<Props> = ({ selectedCharacter }) => {
+  const skin = new URL(selectedCharacter.skin, import.meta.url).href;
   return (
     <div className={styles.parent}>
-      <div>Character skin</div>
-      <div>
-        <Stats stats={characterSelected.stats} />
+      <div className={styles.skin}>
+        <img src={skin} />
+      </div>
+      <div className={styles.stats}>
+        <Stats stats={selectedCharacter.stats} />
       </div>
     </div>
   );

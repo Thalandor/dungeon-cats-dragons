@@ -11,13 +11,18 @@
         & img :global{
             animation: rotation 10s infinite linear;
         }
-        & .and{
-            font-size: 120px;
-            padding: 28px;
+        .letters{
+            display: flex;
+            & .and{
+                font-size: 120px;
+                padding: 28px;
+            }
+            & .elements{
+                padding: 28px;
+                flex-grow: 2;
+            }        
         }
-        & .elements{
-            padding: 28px;
-        }        
+        
     }
 
     .options{
