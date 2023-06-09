@@ -29,7 +29,7 @@ const Stats: React.FC<Props> = ({ stats }: Props) => {
   };
 
   return (
-    <div className={styles.parent}>
+    <div className={styles.container}>
       <div>
         <span>Strength </span>
         {renderStars(stats.strength)}

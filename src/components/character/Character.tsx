@@ -18,7 +18,7 @@ interface Props {
 const Character: React.FC<Props> = ({ selectedCharacter }) => {
   const skin = new URL(selectedCharacter.skin, import.meta.url).href;
   return (
-    <div className={styles.parent}>
+    <div className={styles.container}>
       <div className={styles.name}>
         <div>{selectedCharacter.name}</div>
       </div>

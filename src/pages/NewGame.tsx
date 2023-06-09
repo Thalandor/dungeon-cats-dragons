@@ -30,7 +30,7 @@ const NewGame = () => {
     },
   });
   return (
-    <div className={styles.parent}>
+    <div className={styles.container}>
       <div style={{ flex: 80 }}>
         <Character selectedCharacter={selectedCharacter} />
       </div>
