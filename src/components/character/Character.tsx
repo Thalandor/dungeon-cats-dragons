@@ -19,11 +19,16 @@ const Character: React.FC<Props> = ({ selectedCharacter }) => {
   const skin = new URL(selectedCharacter.skin, import.meta.url).href;
   return (
     <div className={styles.parent}>
-      <div className={styles.skin}>
-        <img src={skin} />
+      <div className={styles.name}>
+        <div>{selectedCharacter.name}</div>
       </div>
-      <div className={styles.stats}>
-        <Stats stats={selectedCharacter.stats} />
+      <div className={styles.characterInfo}>
+        <div className={styles.skin}>
+          <img src={skin} />
+        </div>
+        <div className={styles.stats}>
+          <Stats stats={selectedCharacter.stats} />
+        </div>
       </div>
     </div>
   );

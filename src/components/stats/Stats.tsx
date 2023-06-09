@@ -1,17 +1,15 @@
 import styles from "./Stats.module.scss";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faStarHalfStroke } from "@fortawesome/free-solid-svg-icons";
-import { faStar as faEmptyStar } from "@fortawesome/free-regular-svg-icons";
+import { faStar, faStarHalf } from "@fortawesome/free-solid-svg-icons";
 import { IStats } from "../character/Character";
 
 interface Props {
   stats: IStats;
 }
 
-const star = <FontAwesomeIcon icon={faStar} />;
-const halfStar = <FontAwesomeIcon icon={faStarHalfStroke} />;
-const emptyStar = <FontAwesomeIcon icon={faEmptyStar} />;
+const star = <FontAwesomeIcon icon={faStar} className={styles.star} />;
+const halfStar = <FontAwesomeIcon icon={faStarHalf} className={styles.star} />;
 
 const Stats: React.FC<Props> = ({ stats }: Props) => {
   const renderStars = (value: number) => {
@@ -25,11 +23,6 @@ const Stats: React.FC<Props> = ({ stats }: Props) => {
 
     if (hasHalfStar) {
       stars.push(halfStar);
-    }
-
-    const remainingStars = 5 - filledStars - (hasHalfStar ? 1 : 0);
-    for (let i = 0; i < remainingStars; i++) {
-      stars.push(emptyStar);
     }
 
     return stars;
