@@ -16,7 +16,6 @@ interface Props {
 }
 
 const Character: React.FC<Props> = ({ selectedCharacter }) => {
-  const skin = new URL(selectedCharacter.skin, import.meta.url).href;
   return (
     <div className={styles.container}>
       <div className={styles.name}>
@@ -24,7 +23,7 @@ const Character: React.FC<Props> = ({ selectedCharacter }) => {
       </div>
       <div className={styles.characterInfo}>
         <div className={styles.skin}>
-          <img src={skin} />
+          <img src={selectedCharacter.skin} />
         </div>
         <div className={styles.stats}>
           <Stats stats={selectedCharacter.stats} />

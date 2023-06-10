@@ -17,7 +17,7 @@ const CharacterList: React.FC<CharacterListProps> = ({
         <div onClick={() => setSelectedCharacter(character)}>
           <div key={character.name} className={styles.character}>
             <img
-              src={new URL(character.portrait, import.meta.url).href}
+              src={character.portrait}
               alt={character.name}
               className={styles.image}
             />

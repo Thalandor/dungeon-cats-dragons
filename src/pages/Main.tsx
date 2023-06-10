@@ -3,11 +3,10 @@ import styles from "./Main.module.scss";
 
 const Main = () => {
   const navigate = useNavigate();
-  const wizard = new URL("../assets/wizard_portrait.png", import.meta.url).href;
   return (
     <div className={styles.container}>
       <div className={styles.title}>
-        <img className={styles.rotate} src={wizard}></img>
+        <img className={styles.rotate} src="./wizard_portrait.png"></img>
         <div className={styles.letters}>
           <div className={styles.and}>&</div>
           <div className={styles.elements}>
@@ -16,7 +15,7 @@ const Main = () => {
             <div>Dragons</div>
           </div>
         </div>
-        <img src={wizard}></img>
+        <img src="./wizard_portrait.png"></img>
       </div>
       <div className={styles.options}>
         <div onClick={() => navigate("/new")}>New game</div>

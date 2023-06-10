@@ -15,8 +15,8 @@ export interface ICharacter {
 export const CHARACTERS: ICharacter[] = [
   {
     name: "Bard",
-    portrait: new URL("../assets/bard_portrait.jpg", import.meta.url).href,
-    skin: "../../assets/bard_skin.gif",
+    portrait: "./bard_portrait.jpg",
+    skin: "./bard_skin.gif",
     stats: {
       strength: 5,
       dexterity: 3.5,
@@ -28,8 +28,8 @@ export const CHARACTERS: ICharacter[] = [
   },
   {
     name: "Wizard",
-    portrait: new URL("../assets/wizard_portrait.png", import.meta.url).href,
-    skin: "../../assets/wizard_skin.png",
+    portrait: "./wizard_portrait.png",
+    skin: "./wizard_skin.png",
     stats: {
       strength: 2,
       dexterity: 2,
@@ -47,8 +47,8 @@ const NewGame = () => {
 
   const [selectedCharacter, setSelectedCharacter] = useState<ICharacter>({
     name: "Choose your hero!",
-    portrait: "../../assets/interrogation_skin.jpg",
-    skin: "../../assets/interrogation_skin.jpg",
+    portrait: "./interrogation_skin.jpg",
+    skin: "./interrogation_skin.jpg",
     stats: {
       strength: 0,
       dexterity: 0,
