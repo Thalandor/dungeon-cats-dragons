@@ -12,6 +12,35 @@ export interface ICharacter {
   stats: IStats;
 }
 
+export const CHARACTERS: ICharacter[] = [
+  {
+    name: "Bard",
+    portrait: new URL("../assets/bard_portrait.jpg", import.meta.url).href,
+    skin: "../../assets/bard_skin.gif",
+    stats: {
+      strength: 5,
+      dexterity: 3.5,
+      constitution: 4,
+      intelligence: 2,
+      wisdom: 1,
+      charisma: 2,
+    },
+  },
+  {
+    name: "Wizard",
+    portrait: new URL("../assets/wizard_portrait.png", import.meta.url).href,
+    skin: "../../assets/wizard_skin.png",
+    stats: {
+      strength: 2,
+      dexterity: 2,
+      constitution: 2,
+      intelligence: 5,
+      wisdom: 3,
+      charisma: 2,
+    },
+  },
+];
+
 const NewGame = () => {
   const navigate = useNavigate();
   useKeyPress(() => navigate("/"), ["Escape"]);
@@ -37,38 +66,7 @@ const NewGame = () => {
       <div className={styles.characterList}>
         <CharacterList
           setSelectedCharacter={setSelectedCharacter}
-          characters={[
-            {
-              name: "test",
-              portrait: new URL("../assets/bard_portrait.jpg", import.meta.url)
-                .href,
-              skin: "../../assets/bard_skin.gif",
-              stats: {
-                strength: 5,
-                dexterity: 3.5,
-                constitution: 4,
-                intelligence: 2,
-                wisdom: 1,
-                charisma: 2,
-              },
-            },
-            {
-              name: "test2",
-              portrait: new URL(
-                "../assets/wizard_portrait.png",
-                import.meta.url
-              ).href,
-              skin: "../../assets/wizard_skin.png",
-              stats: {
-                strength: 2,
-                dexterity: 2,
-                constitution: 2,
-                intelligence: 5,
-                wisdom: 3,
-                charisma: 2,
-              },
-            },
-          ]}
+          characters={CHARACTERS}
         />
       </div>
     </div>

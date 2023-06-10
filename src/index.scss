@@ -46,6 +46,10 @@ h1 {
   line-height: 1.1;
 }
 
+*{
+  box-sizing: border-box;
+}
+
 
 
 @media (prefers-color-scheme: black) {
