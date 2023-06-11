@@ -1,12 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ICharacter } from "../../pages/NewGame";
 import styles from "./List.module.scss";
 import { faDollar } from "@fortawesome/free-solid-svg-icons";
+import { ICharacterSolidity } from "../../hooks/useCharacter";
 
 interface Props {
-  list: ICharacter[];
+  list: ICharacterSolidity[];
+  onClick: (token: number, price: bigint) => Promise<void>;
 }
-const List: React.FC<Props> = ({ list }) => {
+const List: React.FC<Props> = ({ list, onClick }) => {
   return (
     <div className={styles.container}>
       {list.map((character) => (
@@ -15,7 +16,10 @@ const List: React.FC<Props> = ({ list }) => {
             <img src={character.portrait}></img>
           </div>
           <div className={styles.name}>{character.name}</div>
-          <div className={styles.icon}>
+          <div
+            className={styles.icon}
+            onClick={() => onClick(character.tokenId, character.price)}
+          >
             <FontAwesomeIcon icon={faDollar} />
           </div>
         </div>

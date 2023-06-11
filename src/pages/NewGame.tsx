@@ -4,38 +4,33 @@ import { useKeyPress } from "../hooks/useKeyPress";
 import styles from "./NewGame.module.scss";
 import CharacterList from "../components/character-list/CharacterList";
 import { useEffect, useState } from "react";
-import { useCharacter } from "../hooks/useCharacter";
+import { ICharacterSolidity, useCharacter } from "../hooks/useCharacter";
 
-export interface ICharacter {
-  name: string;
-  portrait: string;
-  skin: string;
-  stats: IStats;
-  tokenId: number;
-}
-
-const defaultCharacter = {
+const defaultCharacter: ICharacterSolidity = {
   name: "Choose your hero!",
   portrait: "./interrogation_skin.jpg",
   skin: "./interrogation_skin.jpg",
   stats: {
-    strength: 0,
-    dexterity: 0,
-    constitution: 0,
-    intelligence: 0,
-    wisdom: 0,
-    charisma: 0,
+    strength: BigInt(0),
+    dexterity: BigInt(0),
+    constitution: BigInt(0),
+    intelligence: BigInt(0),
+    wisdom: BigInt(0),
+    charisma: BigInt(0),
   },
   tokenId: 99,
+  price: BigInt(0),
 };
 
 const NewGame = () => {
-  const [ownedCharacters, setOwnedCharacters] = useState<ICharacter[]>([]);
+  const [ownedCharacters, setOwnedCharacters] = useState<ICharacterSolidity[]>(
+    []
+  );
   const { getAllCharacters } = useCharacter();
   const navigate = useNavigate();
   useKeyPress(() => navigate("/"), ["Escape"]);
   const [selectedCharacter, setSelectedCharacter] =
-    useState<ICharacter>(defaultCharacter);
+    useState<ICharacterSolidity>(defaultCharacter);
 
   useEffect(() => {
     (async () => {

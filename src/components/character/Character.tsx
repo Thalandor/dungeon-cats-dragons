@@ -1,18 +1,18 @@
-import { ICharacter } from "../../pages/NewGame";
+import { ICharacterSolidity } from "../../hooks/useCharacter";
 import Stats from "../stats/Stats";
 import styles from "./Character.module.scss";
 
 export interface IStats {
-  strength: number;
-  dexterity: number;
-  constitution: number;
-  intelligence: number;
-  wisdom: number;
-  charisma: number;
+  strength: bigint;
+  dexterity: bigint;
+  constitution: bigint;
+  intelligence: bigint;
+  wisdom: bigint;
+  charisma: bigint;
 }
 
 interface Props {
-  selectedCharacter: ICharacter;
+  selectedCharacter: ICharacterSolidity;
 }
 
 const Character: React.FC<Props> = ({ selectedCharacter }) => {

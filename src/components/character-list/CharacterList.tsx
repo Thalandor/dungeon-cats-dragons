@@ -1,10 +1,12 @@
 import React from "react";
 import styles from "./CharacterList.module.scss";
-import { ICharacter } from "../../pages/NewGame";
+import { ICharacterSolidity } from "../../pages/NewGame";
 
 interface CharacterListProps {
-  characters: ICharacter[];
-  setSelectedCharacter: React.Dispatch<React.SetStateAction<ICharacter>>;
+  characters: ICharacterSolidity[];
+  setSelectedCharacter: React.Dispatch<
+    React.SetStateAction<ICharacterSolidity>
+  >;
 }
 
 const CharacterList: React.FC<CharacterListProps> = ({
