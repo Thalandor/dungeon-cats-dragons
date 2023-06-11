@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./CharacterList.module.scss";
-import { ICharacterSolidity } from "../../pages/NewGame";
+import { ICharacterSolidity } from "../../hooks/useCharacter";
 
 interface CharacterListProps {
   characters: ICharacterSolidity[];

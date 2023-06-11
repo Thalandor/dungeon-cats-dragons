@@ -53,6 +53,19 @@ export const ContractABI = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: "string",
+        name: "name",
+        type: "string",
+      },
+    ],
+    name: "CharacterAbandoned",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: "address",
         name: "buyer",
@@ -123,6 +136,19 @@ export const ContractABI = [
     ],
     name: "Transfer",
     type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "abandonCharacter",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
@@ -746,4 +772,4 @@ export const ContractABI = [
   },
 ] as const;
 
-export const ContractAddress = "0x4a2B1d4a0BD19696665Ad3DfDC266134AFDD77c9";
+export const ContractAddress = "0xBDb72CFdA19677caD9a5872fF829A565FF18207c";

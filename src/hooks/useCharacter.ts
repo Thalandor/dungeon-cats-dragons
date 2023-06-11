@@ -1,18 +1,12 @@
 import { useWeb3Context } from "../providers/Web3";
 import { ContractABI, ContractAddress } from "../config/contract";
+import { IStats } from "../components/character/Character";
 
 export interface ICharacterSolidity {
   name: string;
   portrait: string;
   skin: string;
-  stats: {
-    strength: bigint;
-    dexterity: bigint;
-    constitution: bigint;
-    intelligence: bigint;
-    wisdom: bigint;
-    charisma: bigint;
-  };
+  stats: IStats;
   price: bigint;
   tokenId: number;
 }
@@ -69,5 +63,30 @@ export const useCharacter = () => {
     }
   };
 
-  return { getOwnedCharacters, getAllCharacters, buyCharacter };
+  const abandonCharacter = async (tokenId: number) => {
+    if (web3) {
+      const nftContract = new web3.eth.Contract(ContractABI, ContractAddress);
+      const accounts = await web3.eth.getAccounts();
+      const currentAccount = accounts[0];
+      const gasPrice = await web3.eth.getGasPrice();
+
+      const gasEstimate = await nftContract.methods
+        .abandonCharacter(tokenId)
+        .estimateGas({
+          from: currentAccount,
+        });
+      await nftContract.methods.abandonCharacter(tokenId).send({
+        from: currentAccount,
+        gasPrice: gasPrice.toString(),
+        gas: gasEstimate.toString(),
+      });
+    }
+  };
+
+  return {
+    getOwnedCharacters,
+    getAllCharacters,
+    buyCharacter,
+    abandonCharacter,
+  };
 };

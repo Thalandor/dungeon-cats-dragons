@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Character, { IStats } from "../components/character/Character";
+import Character from "../components/character/Character";
 import { useKeyPress } from "../hooks/useKeyPress";
 import styles from "./NewGame.module.scss";
 import CharacterList from "../components/character-list/CharacterList";
@@ -26,7 +26,7 @@ const NewGame = () => {
   const [ownedCharacters, setOwnedCharacters] = useState<ICharacterSolidity[]>(
     []
   );
-  const { getAllCharacters } = useCharacter();
+  const { getOwnedCharacters } = useCharacter();
   const navigate = useNavigate();
   useKeyPress(() => navigate("/"), ["Escape"]);
   const [selectedCharacter, setSelectedCharacter] =
@@ -34,10 +34,10 @@ const NewGame = () => {
 
   useEffect(() => {
     (async () => {
-      const ownCharacters = await getAllCharacters();
+      const ownCharacters = await getOwnedCharacters();
       setOwnedCharacters(ownCharacters);
     })();
-  }, [getAllCharacters]);
+  }, [getOwnedCharacters]);
 
   return (
     <div className={styles.container}>

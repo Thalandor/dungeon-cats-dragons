@@ -12,7 +12,12 @@ const Market = () => {
   );
   const navigate = useNavigate();
   useKeyPress(() => navigate("/"), ["Escape"]);
-  const { getAllCharacters, getOwnedCharacters, buyCharacter } = useCharacter();
+  const {
+    getAllCharacters,
+    getOwnedCharacters,
+    buyCharacter,
+    abandonCharacter,
+  } = useCharacter();
   useEffect(() => {
     (async () => {
       const characters = await getAllCharacters();
@@ -25,11 +30,16 @@ const Market = () => {
   const onBuyHandler = async (tokenId: number, price: bigint) => {
     await buyCharacter(tokenId, price);
   };
+
+  const onAbandonHandler = async (tokenId: number) => {
+    await abandonCharacter(tokenId);
+  };
+
   return (
     <div className={styles.container}>
       <div>
         Own
-        <List list={ownedCharacters} onClick={onBuyHandler} />
+        <List list={ownedCharacters} onClick={onAbandonHandler} />
       </div>
       <div>
         Buy
