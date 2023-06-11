@@ -3,61 +3,47 @@ import Character, { IStats } from "../components/character/Character";
 import { useKeyPress } from "../hooks/useKeyPress";
 import styles from "./NewGame.module.scss";
 import CharacterList from "../components/character-list/CharacterList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useCharacter } from "../hooks/useCharacter";
 
 export interface ICharacter {
   name: string;
   portrait: string;
   skin: string;
   stats: IStats;
+  tokenId: number;
 }
 
-export const CHARACTERS: ICharacter[] = [
-  {
-    name: "Bard",
-    portrait: "./bard_portrait.jpg",
-    skin: "./bard_skin.gif",
-    stats: {
-      strength: 5,
-      dexterity: 3.5,
-      constitution: 4,
-      intelligence: 2,
-      wisdom: 1,
-      charisma: 2,
-    },
+const defaultCharacter = {
+  name: "Choose your hero!",
+  portrait: "./interrogation_skin.jpg",
+  skin: "./interrogation_skin.jpg",
+  stats: {
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    intelligence: 0,
+    wisdom: 0,
+    charisma: 0,
   },
-  {
-    name: "Wizard",
-    portrait: "./wizard_portrait.png",
-    skin: "./wizard_skin.png",
-    stats: {
-      strength: 2,
-      dexterity: 2,
-      constitution: 2,
-      intelligence: 5,
-      wisdom: 3,
-      charisma: 2,
-    },
-  },
-];
+  tokenId: 99,
+};
 
 const NewGame = () => {
+  const [ownedCharacters, setOwnedCharacters] = useState<ICharacter[]>([]);
+  const { getAllCharacters } = useCharacter();
   const navigate = useNavigate();
   useKeyPress(() => navigate("/"), ["Escape"]);
+  const [selectedCharacter, setSelectedCharacter] =
+    useState<ICharacter>(defaultCharacter);
 
-  const [selectedCharacter, setSelectedCharacter] = useState<ICharacter>({
-    name: "Choose your hero!",
-    portrait: "./interrogation_skin.jpg",
-    skin: "./interrogation_skin.jpg",
-    stats: {
-      strength: 0,
-      dexterity: 0,
-      constitution: 0,
-      intelligence: 0,
-      wisdom: 0,
-      charisma: 0,
-    },
-  });
+  useEffect(() => {
+    (async () => {
+      const ownCharacters = await getAllCharacters();
+      setOwnedCharacters(ownCharacters);
+    })();
+  }, [getAllCharacters]);
+
   return (
     <div className={styles.container}>
       <div style={{ flex: 80 }}>
@@ -66,7 +52,7 @@ const NewGame = () => {
       <div className={styles.characterList}>
         <CharacterList
           setSelectedCharacter={setSelectedCharacter}
-          characters={CHARACTERS}
+          characters={ownedCharacters}
         />
       </div>
     </div>

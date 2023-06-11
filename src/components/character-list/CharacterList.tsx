@@ -14,7 +14,10 @@ const CharacterList: React.FC<CharacterListProps> = ({
   return (
     <div className={styles.container}>
       {characters.map((character) => (
-        <div onClick={() => setSelectedCharacter(character)}>
+        <div
+          onClick={() => setSelectedCharacter(character)}
+          key={`CharacterList_${character.name}`}
+        >
           <div key={character.name} className={styles.character}>
             <img
               src={character.portrait}
