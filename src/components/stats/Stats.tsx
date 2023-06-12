@@ -14,7 +14,7 @@ const Stats: React.FC<Props> = ({ stats }: Props) => {
   const renderStars = (value: bigint) => {
     const stars = [];
     for (let i = 0; i < value; i++) {
-      stars.push(star);
+      stars.push(<span key={`star_${i}`}>{star}</span>);
     }
 
     return stars;

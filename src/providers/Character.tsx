@@ -30,7 +30,7 @@ export const CharacterProvider: React.FC<PropsWithChildren> = ({
   useEffect(() => {
     if (signer) {
       const handleCharacterAbandoned = (name: string) => {
-        toast(`${name} has been killed miserably :()`);
+        toast(`${name} has been killed miserably :(`);
         setOwnedCharacters((ownedCharacters) =>
           ownedCharacters.filter((oc) => oc.name !== name)
         );
