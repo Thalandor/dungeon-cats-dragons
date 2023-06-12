@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useContext, useEffect } from "react";
-import { ethers, BrowserProvider, Signer, AbstractProvider } from "ethers";
+import { ethers, BrowserProvider, Signer } from "ethers";
 
 export type Web3ContextType = {
   provider: BrowserProvider | null;
