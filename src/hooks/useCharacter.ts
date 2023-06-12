@@ -3,6 +3,7 @@ import { ContractABI, ContractAddress } from "../config/contract";
 import { IStats } from "../components/character/Character";
 import { Contract } from "ethers";
 import { useCallback } from "react";
+import { toast } from "react-toastify";
 
 export interface ICharacterSolidity {
   name: string;
@@ -41,25 +42,53 @@ export const useCharacter = () => {
     return [];
   }, [currentAccount, getOwnedCharacters, provider]);
 
-  const buyCharacter = async (tokenId: number, price: bigint) => {
-    const nftContract = new Contract(ContractAddress, ContractABI, signer);
-    await nftContract.buyCharacter(tokenId, {
-      from: currentAccount,
-      value: price.toString(),
-    });
-  };
+  const buyCharacter = useCallback(
+    async (tokenId: number, price: bigint) => {
+      const nftContract = new Contract(ContractAddress, ContractABI, signer);
+      await nftContract.buyCharacter(tokenId, {
+        from: currentAccount,
+        value: price.toString(),
+      });
+    },
+    [currentAccount, signer]
+  );
 
-  const abandonCharacter = async (tokenId: number) => {
+  const abandonCharacter = useCallback(
+    async (tokenId: number) => {
+      const nftContract = new Contract(ContractAddress, ContractABI, signer);
+      await nftContract.abandonCharacter(tokenId, {
+        from: currentAccount,
+      });
+    },
+    [currentAccount, signer]
+  );
+
+  const buyEvent = useCallback(async () => {
     const nftContract = new Contract(ContractAddress, ContractABI, signer);
-    await nftContract.abandonCharacter(tokenId, {
-      from: currentAccount,
+    nftContract.on("CharacterBought", (buyer, name, event) => {
+      toast.success(`${buyer} has bought the character '${name}'`, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      event.removeListener();
     });
-  };
+  }, [signer]);
+
+  const abandonEvent = useCallback(async () => {
+    const nftContract = new Contract(ContractAddress, ContractABI, signer);
+    nftContract.on("CharacterAbandoned", (name, event) => {
+      toast.success(`${name} has been abandoned :(`, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      event.removeListener();
+    });
+  }, [signer]);
 
   return {
     getOwnedCharacters,
     getAllCharacters,
     buyCharacter,
     abandonCharacter,
+    buyEvent,
+    abandonEvent,
   };
 };
