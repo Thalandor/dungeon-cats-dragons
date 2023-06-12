@@ -22,16 +22,15 @@ export const Web3Provider: React.FC<PropsWithChildren> = ({ children }) => {
       const ethereum = (window as any).ethereum;
       // New metamask version
       if (typeof ethereum !== "undefined") {
-        await ethereum.request({
+        const accounts = await ethereum.request({
           method: "eth_requestAccounts",
         });
-
         const browseProvider = new ethers.BrowserProvider(ethereum);
         ethereum.on("accountsChanged", function (accounts: string[]) {
-          console.log("accounts: :", accounts[0]);
           setCurrentAccount(accounts[0]);
         });
         const provSigner = await browseProvider.getSigner();
+        setCurrentAccount(accounts[0]);
         setProvider(browseProvider);
         setSigner(provSigner);
       }

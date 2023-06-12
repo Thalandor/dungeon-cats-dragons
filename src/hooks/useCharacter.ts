@@ -14,14 +14,13 @@ export interface ICharacterSolidity {
 }
 
 export const useCharacter = () => {
-  const { provider, signer } = useWeb3Context();
+  const { provider, signer, currentAccount } = useWeb3Context();
 
   const getOwnedCharacters = useCallback(async () => {
     if (provider) {
       const nftContract = new Contract(ContractAddress, ContractABI, provider);
-      const currentAddress = await signer?.getAddress();
       const characters: ICharacterSolidity[] =
-        await nftContract.getOwnedCharacters({ from: currentAddress });
+        await nftContract.getOwnedCharacters({ from: currentAccount });
       return characters;
     }
     return [];
@@ -30,10 +29,8 @@ export const useCharacter = () => {
   const getAllCharacters = useCallback(async () => {
     if (provider) {
       const nftContract = new Contract(ContractAddress, ContractABI, provider);
-      const currentAddress = await signer?.getAddress();
-      console.log("current addressdd: :", currentAddress);
       let characters: ICharacterSolidity[] = await nftContract.getAllCharacters(
-        { from: currentAddress }
+        { from: currentAccount }
       );
       const ownedPieces = await getOwnedCharacters();
       characters = characters.filter(
@@ -42,7 +39,7 @@ export const useCharacter = () => {
       return characters;
     }
     return [];
-  }, [getOwnedCharacters, provider, signer]);
+  }, [currentAccount, getOwnedCharacters, provider]);
 
   const buyCharacter = async (tokenId: number, price: bigint) => {
     // if (web3) {
