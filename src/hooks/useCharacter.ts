@@ -1,6 +1,7 @@
 import { useWeb3Context } from "../providers/Web3";
 import { ContractABI, ContractAddress } from "../config/contract";
 import { IStats } from "../components/character/Character";
+import { useCallback } from "react";
 
 export interface ICharacterSolidity {
   name: string;
@@ -14,7 +15,7 @@ export interface ICharacterSolidity {
 export const useCharacter = () => {
   const { web3 } = useWeb3Context();
 
-  const getOwnedCharacters = async () => {
+  const getOwnedCharacters = useCallback(async () => {
     if (web3) {
       const nftContract = new web3.eth.Contract(ContractABI, ContractAddress);
       const accounts = await web3.eth.getAccounts();
@@ -24,9 +25,9 @@ export const useCharacter = () => {
       return characters;
     }
     return [];
-  };
+  }, [web3]);
 
-  const getAllCharacters = async () => {
+  const getAllCharacters = useCallback(async () => {
     if (web3) {
       const nftContract = new web3.eth.Contract(ContractABI, ContractAddress);
       let characters: ICharacterSolidity[] = await nftContract.methods
@@ -39,49 +40,55 @@ export const useCharacter = () => {
       return characters;
     }
     return [];
-  };
+  }, [getOwnedCharacters, web3]);
 
-  const buyCharacter = async (tokenId: number, price: bigint) => {
-    if (web3) {
-      const nftContract = new web3.eth.Contract(ContractABI, ContractAddress);
-      const accounts = await web3.eth.getAccounts();
-      const currentAccount = accounts[0];
-      const gasPrice = await web3.eth.getGasPrice();
+  const buyCharacter = useCallback(
+    async (tokenId: number, price: bigint) => {
+      if (web3) {
+        const nftContract = new web3.eth.Contract(ContractABI, ContractAddress);
+        const accounts = await web3.eth.getAccounts();
+        const currentAccount = accounts[0];
+        const gasPrice = await web3.eth.getGasPrice();
 
-      const gasEstimate = await nftContract.methods
-        .buyCharacter(tokenId)
-        .estimateGas({
+        const gasEstimate = await nftContract.methods
+          .buyCharacter(tokenId)
+          .estimateGas({
+            from: currentAccount,
+            value: price.toString(),
+          });
+        await nftContract.methods.buyCharacter(tokenId).send({
           from: currentAccount,
+          gasPrice: gasPrice.toString(),
+          gas: gasEstimate.toString(),
           value: price.toString(),
         });
-      await nftContract.methods.buyCharacter(tokenId).send({
-        from: currentAccount,
-        gasPrice: gasPrice.toString(),
-        gas: gasEstimate.toString(),
-        value: price.toString(),
-      });
-    }
-  };
+      }
+    },
+    [web3]
+  );
 
-  const abandonCharacter = async (tokenId: number) => {
-    if (web3) {
-      const nftContract = new web3.eth.Contract(ContractABI, ContractAddress);
-      const accounts = await web3.eth.getAccounts();
-      const currentAccount = accounts[0];
-      const gasPrice = await web3.eth.getGasPrice();
+  const abandonCharacter = useCallback(
+    async (tokenId: number) => {
+      if (web3) {
+        const nftContract = new web3.eth.Contract(ContractABI, ContractAddress);
+        const accounts = await web3.eth.getAccounts();
+        const currentAccount = accounts[0];
+        const gasPrice = await web3.eth.getGasPrice();
 
-      const gasEstimate = await nftContract.methods
-        .abandonCharacter(tokenId)
-        .estimateGas({
+        const gasEstimate = await nftContract.methods
+          .abandonCharacter(tokenId)
+          .estimateGas({
+            from: currentAccount,
+          });
+        await nftContract.methods.abandonCharacter(tokenId).send({
           from: currentAccount,
+          gasPrice: gasPrice.toString(),
+          gas: gasEstimate.toString(),
         });
-      await nftContract.methods.abandonCharacter(tokenId).send({
-        from: currentAccount,
-        gasPrice: gasPrice.toString(),
-        gas: gasEstimate.toString(),
-      });
-    }
-  };
+      }
+    },
+    [web3]
+  );
 
   return {
     getOwnedCharacters,
