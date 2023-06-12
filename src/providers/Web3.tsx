@@ -1,15 +1,22 @@
 import React, { PropsWithChildren, useContext, useEffect } from "react";
-import { Web3 } from "web3";
+import { ethers, BrowserProvider, Signer, AbstractProvider } from "ethers";
 
 export type Web3ContextType = {
-  web3: Web3 | null;
+  provider: BrowserProvider | null;
+  signer: Signer | null;
+  currentAccount: string;
 };
 
-export const Web3Context = React.createContext<Web3ContextType>({ web3: null });
+export const Web3Context = React.createContext<Web3ContextType>({
+  provider: null,
+  signer: null,
+  currentAccount: "",
+});
 
 export const Web3Provider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [web3, setWeb3] = React.useState<Web3 | null>(null);
-
+  const [provider, setProvider] = React.useState<BrowserProvider | null>(null);
+  const [signer, setSigner] = React.useState<Signer | null>(null);
+  const [currentAccount, setCurrentAccount] = React.useState<string>("");
   useEffect(() => {
     (async () => {
       const ethereum = (window as any).ethereum;
@@ -18,13 +25,26 @@ export const Web3Provider: React.FC<PropsWithChildren> = ({ children }) => {
         await ethereum.request({
           method: "eth_requestAccounts",
         });
-        setWeb3(new Web3(ethereum));
+
+        const browseProvider = new ethers.BrowserProvider(ethereum);
+        ethereum.on("accountsChanged", function (accounts: string[]) {
+          console.log("accounts: :", accounts[0]);
+          setCurrentAccount(accounts[0]);
+        });
+        const provSigner = await browseProvider.getSigner();
+        setProvider(browseProvider);
+        setSigner(provSigner);
       }
     })();
+    return () => {
+      provider?.off("accountsChanged");
+    };
   }, []);
 
   return (
-    <Web3Context.Provider value={{ web3 }}>{children}</Web3Context.Provider>
+    <Web3Context.Provider value={{ provider, signer, currentAccount }}>
+      {children}
+    </Web3Context.Provider>
   );
 };
 

@@ -6,9 +6,9 @@ import Market from "./pages/Market";
 import { useWeb3Context } from "./providers/Web3";
 
 function App() {
-  const { web3 } = useWeb3Context();
+  const { provider, signer } = useWeb3Context();
 
-  return web3 ? (
+  return provider && signer ? (
     <Routes>
       <Route path="/" index element={<Main />} />
       <Route path="new" element={<NewGame />} />

@@ -22,11 +22,11 @@ const Market = () => {
     (async () => {
       const characters = await getAllCharacters();
       const ownCharacters = await getOwnedCharacters();
+      console.count("render useEffect");
       setAllCharacters(characters);
       setOwnedCharacters(ownCharacters);
     })();
   }, [getAllCharacters, getOwnedCharacters]);
-
   const onBuyHandler = async (tokenId: number, price: bigint) => {
     await buyCharacter(tokenId, price);
   };
