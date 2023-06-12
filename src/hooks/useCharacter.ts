@@ -3,7 +3,6 @@ import { ContractABI, ContractAddress } from "../config/contract";
 import { IStats } from "../components/character/Character";
 import { Contract } from "ethers";
 import { useCallback } from "react";
-import { toast } from "react-toastify";
 
 export interface ICharacterSolidity {
   name: string;
@@ -30,17 +29,12 @@ export const useCharacter = () => {
   const getAllCharacters = useCallback(async () => {
     if (provider) {
       const nftContract = new Contract(ContractAddress, ContractABI, provider);
-      let characters: ICharacterSolidity[] = await nftContract.getAllCharacters(
-        { from: currentAccount }
-      );
-      const ownedPieces = await getOwnedCharacters();
-      characters = characters.filter(
-        (p) => !ownedPieces.some((ow) => ow.tokenId === p.tokenId)
-      );
+      const characters: ICharacterSolidity[] =
+        await nftContract.getAllCharacters({ from: currentAccount });
       return characters;
     }
     return [];
-  }, [currentAccount, getOwnedCharacters, provider]);
+  }, [currentAccount, provider]);
 
   const buyCharacter = useCallback(
     async (tokenId: number, price: bigint) => {
@@ -63,32 +57,10 @@ export const useCharacter = () => {
     [currentAccount, signer]
   );
 
-  const buyEvent = useCallback(async () => {
-    const nftContract = new Contract(ContractAddress, ContractABI, signer);
-    nftContract.on("CharacterBought", (buyer, name, event) => {
-      toast.success(`${buyer} has bought the character '${name}'`, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-      event.removeListener();
-    });
-  }, [signer]);
-
-  const abandonEvent = useCallback(async () => {
-    const nftContract = new Contract(ContractAddress, ContractABI, signer);
-    nftContract.on("CharacterAbandoned", (name, event) => {
-      toast.success(`${name} has been abandoned :(`, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-      event.removeListener();
-    });
-  }, [signer]);
-
   return {
     getOwnedCharacters,
     getAllCharacters,
     buyCharacter,
     abandonCharacter,
-    buyEvent,
-    abandonEvent,
   };
 };

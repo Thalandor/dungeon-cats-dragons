@@ -4,6 +4,7 @@ import List from "../components/market-list/List";
 import styles from "./Market.module.scss";
 import { ICharacterSolidity, useCharacter } from "../hooks/useCharacter";
 import { useEffect, useState } from "react";
+import { useCharacterContext } from "../providers/Character";
 
 const Market = () => {
   const [allCharacters, setAllCharacters] = useState<ICharacterSolidity[]>([]);
@@ -12,21 +13,19 @@ const Market = () => {
   );
   const navigate = useNavigate();
   useKeyPress(() => navigate("/"), ["Escape"]);
-  const {
-    getAllCharacters,
-    getOwnedCharacters,
-    buyCharacter,
-    abandonCharacter,
-  } = useCharacter();
+  const { getAllCharacters, buyCharacter, abandonCharacter } = useCharacter();
+  const { ownedCharacters: ownCharacters } = useCharacterContext();
   useEffect(() => {
     (async () => {
       const characters = await getAllCharacters();
-      const ownCharacters = await getOwnedCharacters();
-      console.count("render useEffect");
-      setAllCharacters(characters);
+      setAllCharacters(
+        characters.filter(
+          (c) => !ownCharacters.find((oc) => c.name === oc.name)
+        )
+      );
       setOwnedCharacters(ownCharacters);
     })();
-  }, [getAllCharacters, getOwnedCharacters]);
+  }, [getAllCharacters, ownCharacters]);
   const onBuyHandler = async (tokenId: number, price: bigint) => {
     await buyCharacter(tokenId, price);
   };

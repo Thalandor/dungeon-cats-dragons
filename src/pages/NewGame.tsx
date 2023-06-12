@@ -3,8 +3,9 @@ import Character from "../components/character/Character";
 import { useKeyPress } from "../hooks/useKeyPress";
 import styles from "./NewGame.module.scss";
 import CharacterList from "../components/character-list/CharacterList";
-import { useEffect, useState } from "react";
-import { ICharacterSolidity, useCharacter } from "../hooks/useCharacter";
+import { useState } from "react";
+import { ICharacterSolidity } from "../hooks/useCharacter";
+import { useCharacterContext } from "../providers/Character";
 
 const defaultCharacter: ICharacterSolidity = {
   name: "Choose your hero!",
@@ -23,21 +24,11 @@ const defaultCharacter: ICharacterSolidity = {
 };
 
 const NewGame = () => {
-  const [ownedCharacters, setOwnedCharacters] = useState<ICharacterSolidity[]>(
-    []
-  );
-  const { getOwnedCharacters } = useCharacter();
+  const { ownedCharacters } = useCharacterContext();
   const navigate = useNavigate();
   useKeyPress(() => navigate("/"), ["Escape"]);
   const [selectedCharacter, setSelectedCharacter] =
     useState<ICharacterSolidity>(defaultCharacter);
-
-  useEffect(() => {
-    (async () => {
-      const ownCharacters = await getOwnedCharacters();
-      setOwnedCharacters(ownCharacters);
-    })();
-  }, [getOwnedCharacters]);
 
   return (
     <div className={styles.container}>
