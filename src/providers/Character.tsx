@@ -24,11 +24,11 @@ export const CharacterProvider: React.FC<PropsWithChildren> = ({
   const [ownedCharacters, setOwnedCharacters] = useState<ICharacterSolidity[]>(
     []
   );
-  const { signer } = useWeb3Context();
+  const { provider } = useWeb3Context();
   const { getAllCharacters, getOwnedCharacters } = useCharacter();
 
   useEffect(() => {
-    if (signer) {
+    if (provider) {
       const handleCharacterAbandoned = (name: string) => {
         toast(`${name} has been killed miserably :(`);
         setOwnedCharacters((ownedCharacters) =>
@@ -48,21 +48,22 @@ export const CharacterProvider: React.FC<PropsWithChildren> = ({
         }
       };
 
-      const nftContract = new Contract(ContractAddress, ContractABI, signer);
+      const nftContract = new Contract(ContractAddress, ContractABI, provider);
 
       (async () => {
         const characters = await getOwnedCharacters();
         setOwnedCharacters(characters);
       })();
+      nftContract.removeAllListeners();
       nftContract.on("CharacterBought", handleCharacterBought);
       nftContract.on("CharacterAbandoned", handleCharacterAbandoned);
-
       return () => {
-        nftContract.off("CharacterAbandoned", handleCharacterAbandoned);
-        nftContract.off("CharacterBought", handleCharacterBought);
+        nftContract.off("CharacterBought");
+        nftContract.off("CharacterAbandoned");
+        nftContract.removeAllListeners();
       };
     }
-  }, [getAllCharacters, getOwnedCharacters, signer]);
+  }, [getAllCharacters, getOwnedCharacters, provider]);
 
   return (
     <CharacterContext.Provider value={{ ownedCharacters }}>
