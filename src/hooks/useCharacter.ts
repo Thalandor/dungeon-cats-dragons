@@ -24,7 +24,7 @@ export const useCharacter = () => {
       return characters;
     }
     return [];
-  }, [provider, signer]);
+  }, [currentAccount, provider]);
 
   const getAllCharacters = useCallback(async () => {
     if (provider) {
@@ -42,43 +42,18 @@ export const useCharacter = () => {
   }, [currentAccount, getOwnedCharacters, provider]);
 
   const buyCharacter = async (tokenId: number, price: bigint) => {
-    // if (web3) {
-    //   const nftContract = new web3.eth.Contract(ContractABI, ContractAddress);
-    //   const accounts = await web3.eth.getAccounts();
-    //   const currentAccount = accounts[0];
-    //   const gasPrice = await web3.eth.getGasPrice();
-    //   const gasEstimate = await nftContract.methods
-    //     .buyCharacter(tokenId)
-    //     .estimateGas({
-    //       from: currentAccount,
-    //       value: price.toString(),
-    //     });
-    //   await nftContract.methods.buyCharacter(tokenId).send({
-    //     from: currentAccount,
-    //     gasPrice: gasPrice.toString(),
-    //     gas: gasEstimate.toString(),
-    //     value: price.toString(),
-    //   });
-    // }
+    const nftContract = new Contract(ContractAddress, ContractABI, signer);
+    await nftContract.buyCharacter(tokenId, {
+      from: currentAccount,
+      value: price.toString(),
+    });
   };
 
   const abandonCharacter = async (tokenId: number) => {
-    // if (web3) {
-    //   const nftContract = new web3.eth.Contract(ContractABI, ContractAddress);
-    //   const accounts = await web3.eth.getAccounts();
-    //   const currentAccount = accounts[0];
-    //   const gasPrice = await web3.eth.getGasPrice();
-    //   const gasEstimate = await nftContract.methods
-    //     .abandonCharacter(tokenId)
-    //     .estimateGas({
-    //       from: currentAccount,
-    //     });
-    //   await nftContract.methods.abandonCharacter(tokenId).send({
-    //     from: currentAccount,
-    //     gasPrice: gasPrice.toString(),
-    //     gas: gasEstimate.toString(),
-    //   });
-    // }
+    const nftContract = new Contract(ContractAddress, ContractABI, signer);
+    await nftContract.abandonCharacter(tokenId, {
+      from: currentAccount,
+    });
   };
 
   return {
