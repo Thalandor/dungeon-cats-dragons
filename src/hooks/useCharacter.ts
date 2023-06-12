@@ -48,18 +48,8 @@ export const useCharacter = () => {
         const nftContract = new web3.eth.Contract(ContractABI, ContractAddress);
         const accounts = await web3.eth.getAccounts();
         const currentAccount = accounts[0];
-        const gasPrice = await web3.eth.getGasPrice();
-
-        const gasEstimate = await nftContract.methods
-          .buyCharacter(tokenId)
-          .estimateGas({
-            from: currentAccount,
-            value: price.toString(),
-          });
         await nftContract.methods.buyCharacter(tokenId).send({
           from: currentAccount,
-          gasPrice: gasPrice.toString(),
-          gas: gasEstimate.toString(),
           value: price.toString(),
         });
       }
@@ -73,17 +63,8 @@ export const useCharacter = () => {
         const nftContract = new web3.eth.Contract(ContractABI, ContractAddress);
         const accounts = await web3.eth.getAccounts();
         const currentAccount = accounts[0];
-        const gasPrice = await web3.eth.getGasPrice();
-
-        const gasEstimate = await nftContract.methods
-          .abandonCharacter(tokenId)
-          .estimateGas({
-            from: currentAccount,
-          });
         await nftContract.methods.abandonCharacter(tokenId).send({
           from: currentAccount,
-          gasPrice: gasPrice.toString(),
-          gas: gasEstimate.toString(),
         });
       }
     },
