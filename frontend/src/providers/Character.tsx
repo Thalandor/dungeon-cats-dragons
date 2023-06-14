@@ -32,23 +32,32 @@ export const CharacterProvider: React.FC<PropsWithChildren> = ({
     (async () => {
       if (provider) {
         const handleCharacterAbandoned = async (name: string) => {
-          if (ownedCharacters.find((c) => c.name === name)) {
-            toast(`${name} has been killed miserably :(`);
-            setOwnedCharacters((ownedCharacters) =>
-              ownedCharacters.filter((oc) => oc.name !== name)
-            );
-          }
+          setOwnedCharacters((ownedCharacters) => {
+            if (ownedCharacters.find((c) => c.name === name)) {
+              toast(`${name} has been killed miserably :(`);
+              return ownedCharacters.filter((oc) => oc.name !== name);
+            } else {
+              return ownedCharacters;
+            }
+          });
         };
         const handleCharacterBought = async (buyer: string, name: string) => {
           const allCharacters = await getAllCharacters();
           if (!ownedCharacters.find((c) => c.name === name)) {
             const newCharacter = allCharacters.find((ac) => ac.name == name);
             if (newCharacter) {
-              toast(`${name} has been added to the party!!`);
-              setOwnedCharacters((ownedCharacters) => [
-                ...ownedCharacters,
-                newCharacter,
-              ]);
+              setOwnedCharacters((ownedCharacters) => {
+                if (!ownedCharacters.find((c) => c.name === name)) {
+                  const newCharacter = allCharacters.find(
+                    (ac) => ac.name == name
+                  );
+                  if (newCharacter) {
+                    toast(`${name} has been added to the party!!`);
+                    return [...ownedCharacters, newCharacter];
+                  }
+                }
+                return ownedCharacters;
+              });
             }
           }
         };
