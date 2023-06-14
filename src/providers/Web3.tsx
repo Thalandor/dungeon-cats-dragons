@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, useContext, useEffect } from "react";
 import { ethers, BrowserProvider, Signer } from "ethers";
+import { CharacterProvider } from "./Character";
 
 export type Web3ContextType = {
   provider: BrowserProvider | null;
@@ -18,31 +19,33 @@ export const Web3Provider: React.FC<PropsWithChildren> = ({ children }) => {
   const [signer, setSigner] = React.useState<Signer | null>(null);
   const [currentAccount, setCurrentAccount] = React.useState<string>("");
   useEffect(() => {
-    (async () => {
+    // Timeout used as it seems metamask is not behaving correctly if we just open a tab and try to load the page.
+    setTimeout(async () => {
       const ethereum = (window as any).ethereum;
       // New metamask version
       if (typeof ethereum !== "undefined") {
         const accounts = await ethereum.request({
           method: "eth_requestAccounts",
         });
-        const browseProvider = new ethers.BrowserProvider(ethereum);
         ethereum.on("accountsChanged", function (accounts: string[]) {
           setCurrentAccount(accounts[0]);
         });
-        const provSigner = await browseProvider.getSigner();
         setCurrentAccount(accounts[0]);
+
+        const browseProvider = new ethers.BrowserProvider(ethereum);
+        const provSigner = await browseProvider.getSigner();
         setProvider(browseProvider);
         setSigner(provSigner);
       }
-    })();
-    return () => {
-      provider?.off("accountsChanged");
-    };
+    }, 1000);
   }, []);
-
   return (
     <Web3Context.Provider value={{ provider, signer, currentAccount }}>
-      {children}
+      {provider ? (
+        <CharacterProvider>{children}</CharacterProvider>
+      ) : (
+        "Loading cats...."
+      )}
     </Web3Context.Provider>
   );
 };

@@ -28,42 +28,46 @@ export const CharacterProvider: React.FC<PropsWithChildren> = ({
   const { getAllCharacters, getOwnedCharacters } = useCharacter();
 
   useEffect(() => {
-    if (provider) {
-      const handleCharacterAbandoned = (name: string) => {
-        toast(`${name} has been killed miserably :(`);
-        setOwnedCharacters((ownedCharacters) =>
-          ownedCharacters.filter((oc) => oc.name !== name)
-        );
-      };
-      const handleCharacterBought = async (buyer: string, name: string) => {
-        const allCharacters = await getAllCharacters();
-        const newCharacter = allCharacters.find((ac) => ac.name == name);
-        if (newCharacter) {
-          toast(`${name} has been added to the party!!`);
+    let nftContract: Contract;
+    (async () => {
+      if (provider) {
+        const handleCharacterAbandoned = (name: string) => {
+          toast(`${name} has been killed miserably :(`);
+          setOwnedCharacters((ownedCharacters) =>
+            ownedCharacters.filter((oc) => oc.name !== name)
+          );
+        };
+        const handleCharacterBought = async (buyer: string, name: string) => {
+          const allCharacters = await getAllCharacters();
+          const newCharacter = allCharacters.find((ac) => ac.name == name);
+          if (newCharacter) {
+            toast(`${name} has been added to the party!!`);
 
-          setOwnedCharacters((ownedCharacters) => [
-            ...ownedCharacters,
-            newCharacter,
-          ]);
-        }
-      };
+            setOwnedCharacters((ownedCharacters) => [
+              ...ownedCharacters,
+              newCharacter,
+            ]);
+          }
+        };
 
-      const nftContract = new Contract(ContractAddress, ContractABI, provider);
+        nftContract = new Contract(ContractAddress, ContractABI, provider);
 
-      (async () => {
         const characters = await getOwnedCharacters();
         setOwnedCharacters(characters);
-      })();
-      nftContract.removeAllListeners();
-      nftContract.on("CharacterBought", handleCharacterBought);
-      nftContract.on("CharacterAbandoned", handleCharacterAbandoned);
-      return () => {
         nftContract.off("CharacterBought");
         nftContract.off("CharacterAbandoned");
-        nftContract.removeAllListeners();
-      };
-    }
-  }, [getAllCharacters, getOwnedCharacters, provider]);
+
+        nftContract.on("CharacterBought", handleCharacterBought);
+        nftContract.on("CharacterAbandoned", handleCharacterAbandoned);
+        console.log(`post binds ntfcvontract: :`, nftContract.listenerCount());
+      }
+    })();
+
+    return () => {
+      nftContract?.off("CharacterBought");
+      nftContract?.off("CharacterAbandoned");
+    };
+  }, []);
 
   return (
     <CharacterContext.Provider value={{ ownedCharacters }}>
