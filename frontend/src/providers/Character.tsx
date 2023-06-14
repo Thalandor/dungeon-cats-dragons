@@ -31,22 +31,25 @@ export const CharacterProvider: React.FC<PropsWithChildren> = ({
     let nftContract: Contract;
     (async () => {
       if (provider) {
-        const handleCharacterAbandoned = (name: string) => {
-          toast(`${name} has been killed miserably :(`);
-          setOwnedCharacters((ownedCharacters) =>
-            ownedCharacters.filter((oc) => oc.name !== name)
-          );
+        const handleCharacterAbandoned = async (name: string) => {
+          if (ownedCharacters.find((c) => c.name === name)) {
+            toast(`${name} has been killed miserably :(`);
+            setOwnedCharacters((ownedCharacters) =>
+              ownedCharacters.filter((oc) => oc.name !== name)
+            );
+          }
         };
         const handleCharacterBought = async (buyer: string, name: string) => {
           const allCharacters = await getAllCharacters();
-          const newCharacter = allCharacters.find((ac) => ac.name == name);
-          if (newCharacter) {
-            toast(`${name} has been added to the party!!`);
-
-            setOwnedCharacters((ownedCharacters) => [
-              ...ownedCharacters,
-              newCharacter,
-            ]);
+          if (!ownedCharacters.find((c) => c.name === name)) {
+            const newCharacter = allCharacters.find((ac) => ac.name == name);
+            if (newCharacter) {
+              toast(`${name} has been added to the party!!`);
+              setOwnedCharacters((ownedCharacters) => [
+                ...ownedCharacters,
+                newCharacter,
+              ]);
+            }
           }
         };
 
@@ -54,8 +57,7 @@ export const CharacterProvider: React.FC<PropsWithChildren> = ({
 
         const characters = await getOwnedCharacters();
         setOwnedCharacters(characters);
-        nftContract.off("CharacterBought");
-        nftContract.off("CharacterAbandoned");
+        nftContract.removeAllListeners();
 
         nftContract.on("CharacterBought", handleCharacterBought);
         nftContract.on("CharacterAbandoned", handleCharacterAbandoned);
