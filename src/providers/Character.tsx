@@ -59,7 +59,6 @@ export const CharacterProvider: React.FC<PropsWithChildren> = ({
 
         nftContract.on("CharacterBought", handleCharacterBought);
         nftContract.on("CharacterAbandoned", handleCharacterAbandoned);
-        console.log(`post binds ntfcvontract: :`, nftContract.listenerCount());
       }
     })();
 

@@ -19,9 +19,8 @@ export const Web3Provider: React.FC<PropsWithChildren> = ({ children }) => {
   const [signer, setSigner] = React.useState<Signer | null>(null);
   const [currentAccount, setCurrentAccount] = React.useState<string>("");
   useEffect(() => {
-    // Timeout used as it seems metamask is not behaving correctly if we just open a tab and try to load the page.
-    setTimeout(async () => {
-      const ethereum = (window as any).ethereum;
+    const ethereum = (window as any).ethereum;
+    (async () => {
       // New metamask version
       if (typeof ethereum !== "undefined") {
         const accounts = await ethereum.request({
@@ -37,7 +36,10 @@ export const Web3Provider: React.FC<PropsWithChildren> = ({ children }) => {
         setProvider(browseProvider);
         setSigner(provSigner);
       }
-    }, 1000);
+    })();
+    return () => {
+      ethereum.removeListener("accountsChanged");
+    };
   }, []);
   return (
     <Web3Context.Provider value={{ provider, signer, currentAccount }}>
